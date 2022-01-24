@@ -1,5 +1,8 @@
 #include<iostream>
+#include<vector>
 #include "SFML/Graphics.hpp"
+#include"globals.h"
+#include"missiles.h"
 using namespace std;
 
 enum DIRECTIONS { LEFT, RIGHT, UP, DOWN }; //left is 0, right is 1, up is 2, down is 3
@@ -24,9 +27,28 @@ int main() {
     int ypos = 700;
     int vx = 0;
     int vy = 0;
+    int ticker = 60;
+    int frameNum = 0;
+    int direction = RIGHT;
     player.setPosition(xpos, ypos); //top left "corner" of circle (not center!)
     bool keys[] = { false, false, false, false };
 
+
+    //missile (the things the player shoots) setup-----------------------
+    int justShot = 0;
+    //set up variables for missle image
+    sf::Texture MissileImg;
+    MissileImg.loadFromFile("missile.png");
+    sf::Sprite MissilePic;
+    MissilePic.setTexture(MissileImg);
+
+    //vector to hold missiles
+    vector<missile*> missiles; // creates vector of class missile pointers
+    vector<missile*>::iterator iter2; // creates an iterator to walk through our missiles vector
+    for (int i = 0; i < 5; i++) {
+        missile* newMissile = new missile(xpos, ypos, MissilePic);
+        missiles.push_back(newMissile);
+    }
 
     //################### HOLD ONTO YOUR BUTTS, ITS THE GAME LOOP###############################################################
     while (screen.isOpen()) {//keep window open until user shuts it down
@@ -58,6 +80,11 @@ int main() {
             }
             else keys[DOWN] = false;
 
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                keys[SPACE] = true;
+            }
+            else keys[SPACE] = false;
+
 
         }//end event loop---------------------------------------------------------------
 
@@ -88,7 +115,22 @@ int main() {
         //animation---------------------------------------------------
         ticker += 1;
 
+        if (ticker % 10 == 0)
+            frameNum += 1;
 
+        if (frameNum > 4)
+            frameNum = 0;
+
+        if (direction == RIGHT) {
+            playerImg = sf::IntRect((frameNum + 5) * 32, 0, 30, 30);
+        }
+        else if (direction == LEFT) {
+            playerImg = sf::IntRect((frameNum + 5) * 32, 0, -30, 30);
+            cout << "left" << frameNum + 5;
+        }
+        else {
+            playerImg = sf::IntRect(frameNum * 32, 0, 30, 30);
+        }
 
 
 
