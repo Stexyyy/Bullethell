@@ -5,7 +5,7 @@
 #include"missiles.h"
 using namespace std;
 
-enum DIRECTIONS { LEFT, RIGHT, UP, DOWN }; //left is 0, right is 1, up is 2, down is 3
+enum DIRECTIONS { LEFT, RIGHT, UP, DOWN, SPACE }; //left is 0, right is 1, up is 2, down is 3
 
 int main() {
     //game set up (you'll need these lines in every game)
@@ -31,7 +31,7 @@ int main() {
     int frameNum = 0;
     int direction = RIGHT;
     player.setPosition(xpos, ypos); //top left "corner" of circle (not center!)
-    bool keys[] = { false, false, false, false };
+    bool keys[] = { false, false, false, false, false };
 
 
     //missile (the things the player shoots) setup-----------------------
@@ -88,7 +88,33 @@ int main() {
 
         }//end event loop---------------------------------------------------------------
 
-         //move ship
+        justShot++; //increment ticker
+        if (keys[SPACE] == true) {
+            for (iter2 = missiles.begin(); iter2 != missiles.end(); iter2++) {
+                if (((*iter2)->isAlive()) == false && justShot > 5) { //only shoot dead missiles, add in pause
+                    (*iter2)->shoot(xpos, ypos); //shoot the thing the iterator is pointing to
+                    justShot = 0; //reset ticker
+                }
+
+
+            }
+
+        }
+
+
+        //move missiles
+        for (iter2 = missiles.begin(); iter2 != missiles.end(); iter2++) {
+            if ((*iter2)->offScreen())
+                (*iter2)->kill();
+        }
+
+        //cull the missiles
+        for (iter2 = missiles.begin(); iter2 != missiles.end(); iter2++) {
+            if ((*iter2)->offScreen())
+                (*iter2)->kill();
+        }
+
+        //move ship
         if (keys[LEFT] == true)
             vx = -5;
 
@@ -103,11 +129,11 @@ int main() {
             vy = 5;
         else vy = 0;
 
-        
-        
-        
-       
-        
+
+
+
+
+
         xpos += vx;
         ypos += vy;
         player.setPosition(xpos, ypos);
@@ -138,6 +164,10 @@ int main() {
         //render section-----------------------------------------
         screen.clear(); //wipes screen, without this things smear
 
+        //draw missiles
+        for (iter2 = missiles.begin(); iter2 != missiles.end(); iter2++) {
+            (*iter2)->draw(screen);
+        }
 
         screen.draw(player); //draw player
         screen.display(); //flips memory drawings onto screen
