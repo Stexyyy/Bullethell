@@ -5,7 +5,7 @@
 #include"missiles.h"
 using namespace std;
 
-enum DIRECTIONS { LEFT, RIGHT, UP, DOWN, SPACE }; //left is 0, right is 1, up is 2, down is 3
+//enum DIRECTIONS { LEFT, RIGHT, UP, DOWN, SPACE }; //left is 0, right is 1, up is 2, down is 3
 
 int main() {
     //game set up (you'll need these lines in every game)
@@ -104,8 +104,9 @@ int main() {
 
         //move missiles
         for (iter2 = missiles.begin(); iter2 != missiles.end(); iter2++) {
-            if ((*iter2)->offScreen())
-                (*iter2)->kill();
+            
+                (*iter2)->move();
+            cout << "moving missiles!";
         }
 
         //cull the missiles
