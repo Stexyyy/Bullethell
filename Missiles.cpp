@@ -2,6 +2,8 @@
 #include "globals.h"
 #include "SFML/Graphics.hpp"
 #include<math.h>
+#include<iostream>
+using namespace std;
 
 //default constructor
 missile::missile() {
@@ -31,6 +33,7 @@ missile::missile(int x, int y) {
 
 void missile::move() {
 	ypos -= 5; //simply move the missile up when called
+	cout << "inside move function";
 }
 
 //we pass a pointer to the SFML game screen here // so the function knows where to draw it!
